@@ -1,0 +1,286 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* BODY */
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background: #f3f4f6;
+}
+
+/* TOPBAR */
+.topbar {
+    background: #111;
+    color: #fff;
+    padding: 14px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #8b0000;
+}
+
+.brand {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+button {
+    background: #111;
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #8b0000;
+}
+
+/* WRAPPER */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 2000px;
+}
+
+/* HEADER */
+thead tr:first-child {
+    background: #0f0f0f;
+}
+
+thead tr:nth-child(2) {
+    background: #0f0f0f;
+}
+
+th {
+    height: 44px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border: 1px solid #2b2b2b;
+}
+
+/* GRUPOS */
+th[colspan="5"] {
+    background: #8b0000 !important;
+}
+
+th[colspan="6"] {
+    background: #6b0000 !important;
+}
+
+/* SUBHEADER VISUAL */
+thead tr:nth-child(2) th {
+    font-weight: 500;
+    color: #d1d5db;
+}
+
+/* BODY */
+td {
+    height: 48px;
+    padding: 8px 10px;
+    font-size: 13px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+}
+
+/* ZEBRA */
+tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+tbody tr:hover {
+    background: #f1f5f9;
+}
+
+/* TEXTO */
+td:nth-child(2),
+td:nth-child(8),
+td:nth-child(9) {
+    text-align: left;
+    padding-left: 14px;
+    line-height: 1.4;
+}
+
+/* INPUTS */
+input, select {
+    width: 70px;
+    height: 32px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #f9fafb;
+    font-size: 12px;
+    text-align: center;
+}
+
+td input[type="number"] {
+    width: 90px;
+}
+
+input:focus, select:focus {
+    border-color: #8b0000;
+    background: #fff;
+    outline: none;
+}
+
+/* TOTAIS */
+td[id^="beneficio"],
+td[id^="esforco"] {
+    font-weight: 600;
+    background: #f3f4f6;
+}
+
+/* PRIORIDADE */
+td[id^="prioridade"] {
+    font-weight: 700;
+    border-radius: 6px;
+}
+
+/* BADGES */
+.prio-priorizar { background:#8b0000;color:#fff; }
+.prio-programar { background:#b45309;color:#fff; }
+.prio-considerar { background:#1d4ed8;color:#fff; }
+.prio-arquivar { background:#4b5563;color:#fff; }
+
+/* AÇÕES */
+td:last-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+/* SCROLL */
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+}
+/* COLUNA STATUS MAIS LARGA */
+td:nth-last-child(2),
+th:nth-last-child(2) {
+    min-width: 140px;
+}
+/* SELECT STATUS BONITO */
+td select[data-status] {
+    width: 100%;
+    padding: 6px 10px;
+    text-align: left;
+}
+td select {
+    font-size: 12px;
+}
+/* ================= SELECT MODERNO ================= */
+
+select {
+    width: 70px;
+    height: 32px;
+
+    padding: 4px 8px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #111;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+/* HOVER */
+select:hover {
+    border-color: #8b0000;
+    background: #fafafa;
+}
+
+/* FOCUS */
+select:focus {
+    outline: none;
+    border-color: #8b0000;
+    box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.2);
+}
+
+/* REMOVE SETA FEIA NATIVA */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23111' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    background-size: 14px;
+
+    padding-right: 24px;
+}
+
+/* DROPDOWN LISTA */
+select option {
+    background: #fff;
+    color: #111;
+}
+/* BOX INTERNO DAS CÉLULAS */
+.cell-box {
+    max-height: 40px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 4px;
+}
+
+/* scroll interno bonito */
+.cell-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.cell-box::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+td {
+    height: 48px;
+    vertical-align: middle;
+}
+td {
+    white-space: nowrap;
+}
+.toast-sucesso {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #16a34a;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+
+    display: none;            /* ✅ ESSENCIAL */
+    opacity: 0;
+    transform: translateY(-10px);
+
+    transition: all 0.3s ease;
+    z-index: 9999;
+}
+

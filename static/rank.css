@@ -1,0 +1,95 @@
+.page-header {
+    text-align: center;
+    padding: 70px 24px 50px;
+}
+
+.page-header h2 {
+    font-size: 32px;
+    color: var(--primary);
+}
+
+.page-header p {
+    color: var(--text-muted);
+}
+
+.ranking-container {
+    max-width: 900px;
+    margin: 0 auto 100px;
+    padding: 0 24px;
+}
+
+.ranking-item {
+    box-sizing: border-box;
+    background: var(--white);
+    padding: 28px 34px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center; /* 🔥 ESSA LINHA RESOLVE */
+    justify-content: space-between;
+
+}
+
+.ranking-text strong {
+    font-size: 18px;
+    display: block;
+}
+
+.ranking-text span {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+.ranking-text {
+    flex: 1; /* 🔥 ESSA LINHA resolve de verdade */
+}
+.ranking-score {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary);
+    padding: 14px 22px;
+    border-radius: 999px;
+}
+
+.ranking-item:first-child {
+    border-left: 6px solid var(--primary);
+}
+.rank-badge {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #1f2933;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-right: 16px;
+    font-size: 14px;
+}
+
+.rank-badge.gold {
+    background: #facc15;
+    color: #92400e;
+}
+
+.rank-badge.silver {
+    background: #d1d5db;
+    color: #374151;
+}
+
+.rank-badge.bronze {
+    background: #f59e0b;
+    color: #78350f;
+}
+
+/* RESPONSIVO */
+@media (max-width: 640px) {
+    .ranking-item {
+        flex-direction: column;
+    }
+
+    .ranking-score {
+        align-self: flex-end;
+    }
+}

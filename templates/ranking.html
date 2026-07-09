@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking de Ideias</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/base.css">
+    <link rel="stylesheet" href="/static/rank.css">
+    <link rel="shortcut icon" href="/static/Designer.png">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Incubadora Nissan</div>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/formulario">Formulário</a></li>
+        <li><a href="/ranking">Ranking</a></li>
+        <li><a href="/contato">Contato</a></li>
+    </ul>
+</nav>
+
+<main>
+    <div class="page-header">
+        <h2>Ranking de Ideias</h2>
+        <p>Ideias aprovadas com maior pontuação</p>
+    </div>
+
+    <div class="ranking-container" id="ranking"></div>
+</main>
+
+<footer class="footer">
+    © 2026 Nissan - Paint Shop Performance
+</footer>
+
+<script>
+    function iconeScore(index) {
+    if (index === 0) return "🥇";
+    if (index === 1) return "🥈";
+    if (index === 2) return "🥉";
+    return "📌"; // padrão
+}
+fetch("/api/ranking")
+    .then(res => res.json())
+    .then(data => {
+        const ranking = document.getElementById("ranking");
+
+        if (!data.length) {
+            ranking.innerHTML = "<p style='text-align:center'>Nenhuma ideia aprovada ainda.</p>";
+            return;
+        }
+
+        let html = "";
+
+        data.forEach((i, index) => {
+            const posicao = index + 1;
+
+            let badge = "rank-badge";
+            if (posicao === 1) badge += " gold";
+            else if (posicao === 2) badge += " silver";
+            else if (posicao === 3) badge += " bronze";
+
+            html += `
+                <div class="ranking-item">
+                    <div class="${badge}">${posicao}</div>
+
+                    <div class="ranking-text">
+                        <strong>${i.nome}</strong>
+                        <span>${i.titulo}</span>
+                    </div>
+
+                    <div class="ranking-score">
+                        ${iconeScore(index)}
+                    </div>
+                </div>
+            `;
+        });
+
+        ranking.innerHTML = html;
+    });
+</script>
+
+</body>
+</html>

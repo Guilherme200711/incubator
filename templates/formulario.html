@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Enviar Ideia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/base.css">
+    <link rel="stylesheet" href="/static/forms.css">
+    <link rel="shortcut icon" href="/static/Designer.png" type="image/x-icon">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Incubadora Nissan</div>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/formulario">Formulário</a></li>
+        <li><a href="/ranking">Ranking</a></li>
+        <li><a href="/contato">Contato</a></li>
+    </ul>
+</nav>
+
+<main class="form-page">
+<form id="formIdeia">
+
+    <!-- DADOS DO COLABORADOR (LOGIN) -->
+    <div class="form-header">
+        <h2>Enviar Ideia</h2>
+        <p>Preencha os campos conforme o formulário oficial de projetos</p>
+    </div>
+
+    <div class="form-group">
+        <label>Nome Completo</label>
+        <input type="text" name="nome" value="{{ nome }}" readonly required>
+    </div>
+
+    <div class="form-group">
+        <label>Matrícula</label>
+        <input type="text" name="matricula" value="{{ matricula }}" readonly required>
+    </div>
+
+    <div class="form-group">
+        <label>Área</label>
+        <select name="area" required>
+            <option selected>{{ area }}</option>
+            <option>Processo</option>
+            <option>Sealer</option>
+            <option>UDC</option>
+            <option>ED Sanding</option>
+            <option>Top Coat Pintura</option>
+            <option>Finish Pintura</option>
+            <option>Performance</option>
+            <option>Kaizen</option>
+            <option>RTC</option>
+            <option>Mascaramento Biton</option>
+            <option>Injetora</option>
+            <option>Ferramentaria</option>
+            <option>Carregamento</option>
+            <option>Top Coat Plástico</option>
+            <option>Submontagem</option>
+            <option>T&amp;C</option>
+            <option>Body</option>
+            <option>Estamparia</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Gestor Direto</label>
+        <input type="text" name="supervisor" required>
+    </div>
+
+    <div class="form-group">
+        <label>Título da Ideia</label>
+        <input type="text" name="titulo" required>
+    </div>
+
+    <!-- DESCRIÇÃO DA IDEIA -->
+    <div class="form-group">
+        <label>Descrição da Ideia</label>
+        <textarea name="descricao" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Antes e Depois</label>
+        <textarea name="antes_depois"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Peça Afetada (se aplicável)</label>
+        <input type="text" name="peca">
+    </div>
+
+    <div class="form-group">
+        <label>Material Afetado (se aplicável)</label>
+        <input type="text" name="material">
+    </div>
+
+    <div class="form-group">
+        <label>Part Number / MABEC</label>
+        <input type="text" name="part_number">
+    </div>
+    <div class="form-group">
+        <label>Equipamento (se aplicável)</label>
+        <input type="text" name="equipamento">
+    </div>
+
+    <div class="form-group">
+        <label>Área de Aplicação da Ideia</label>
+        <input type="text" name="area_aplicacao" required>
+    </div>
+
+    <button type="submit" class="btn">Enviar Ideia</button>
+
+</form>
+</main>
+
+<footer class="footer">
+    © 2026 Nissan - Paint Shop Performance
+</footer>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
