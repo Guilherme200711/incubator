@@ -215,6 +215,87 @@ def performance():
 def baixar_excel():
     return send_file("Performance_Projetos.xlsx", as_attachment=True)
 
+@app.route("/api/dashboard")
+def api_dashboard():
+
+    conn = conectar_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            id,
+            titulo,
+            data_criacao,
+            nome,
+            matricula,
+            supervisor,
+            area,
+            descricao,
+            antes_depois,
+            impacto,
+            saving_real,
+
+            qualidade,
+            seguranca,
+            kpi,
+            saving_beneficio,
+            norma,
+
+            mudanca_processo,
+            mudanca_material,
+            tempo,
+            treinamento,
+            logistica,
+            fornecedor,
+
+            total_beneficio,
+            total_esforco,
+            prioridade,
+            status
+
+        FROM ideias
+        ORDER BY id
+    """)
+
+    dados = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return jsonify([
+        {
+            "id": r[0],
+            "titulo": r[1],
+            "data_criacao": str(r[2]),
+            "nome": r[3],
+            "matricula": r[4],
+            "supervisor": r[5],
+            "area": r[6],
+            "descricao": r[7],
+            "antes_depois": r[8],
+            "impacto": r[9],
+            "saving_real": r[10],
+
+            "qualidade": r[11],
+            "seguranca": r[12],
+            "kpi": r[13],
+            "saving_beneficio": r[14],
+            "norma": r[15],
+
+            "mudanca_processo": r[16],
+            "mudanca_material": r[17],
+            "tempo": r[18],
+            "treinamento": r[19],
+            "logistica": r[20],
+            "fornecedor": r[21],
+
+            "total_beneficio": r[22],
+            "total_esforco": r[23],
+            "prioridade": r[24],
+            "status": r[25]
+        }
+        for r in dados
+    ])
 
 @app.route("/ranking")
 def ranking():
