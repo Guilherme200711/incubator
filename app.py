@@ -156,8 +156,8 @@ def sincronizar_excel():
                 r[20],  # Logistica
                 r[21],  # Fornecedor
 
-                r[22],  # Total Beneficio
-                r[23],  # Total Esforco
+                float(r[22] or 0),  # Total Beneficio
+                float(r[23 or 0]),  # Total Esforco
                 r[24],  # Prioridade
                 r[25]   # Status
             ])
