@@ -18,6 +18,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 
+function formatarDataBrasil(dataStr) {
+    if (!dataStr) return "-";
+
+    const [data, hora] = dataStr.split(" ");
+    const [ano, mes, dia] = data.split("-");
+    const [h, m] = hora.split(":");
+
+    return `${dia}/${mes}/${ano} ${h}:${m}`;
+}
+
 // ===============================
 // CARREGAR IDEIAS
 // ===============================
@@ -39,7 +49,7 @@ async function carregarIdeias() {
 
         tr.innerHTML = `
             <td>${i.id ?? "-"}</td>
-            <td>${i.data_criacao ?? "-"}</td>
+            <td>${formatarDataBrasil(i.data_criacao)}</td>
             <td>${i.nome ?? "-"}</td>
             <td>${i.matricula ?? "-"}</td>
             <td>${i.area ?? "-"}</td>
@@ -67,6 +77,7 @@ async function carregarIdeias() {
 
 
         <td>
+            
             <select data-prioridade="${i.id}">
                 ${Array.from(
                     { length: totalIdeias },
@@ -80,7 +91,7 @@ async function carregarIdeias() {
         </td>
 
         <td>
-        <select data-status="${i.id}" onchange="salvar(${i.id})">
+        <select data-status="${i.id}">
             <option ${(i.status || "").trim() === "Validação" ? "selected" : ""}>Validação</option>
             <option ${(i.status || "").trim() === "Não Viável" ? "selected" : ""}>Não Viável</option>
             <option ${(i.status || "").trim() === "Incubadora" ? "selected" : ""}>Incubadora</option>
@@ -114,7 +125,7 @@ function selectOpcao(id, tipo, valor = 0) {
     valor = Number(valor) || 0;
 
     return `
-        <select data-${tipo}="${id}" onchange="calcular(${id})">
+        <select data-${tipo}="${id}">
             <option value="0" ${valor == 0 ? "selected" : ""}>-</option>
             <option value="3" ${valor == 3 ? "selected" : ""}>Baixo</option>
             <option value="6" ${valor == 6 ? "selected" : ""}>Médio</option>
@@ -152,25 +163,23 @@ function mostrarSalvo() {
 
     if (!el) return;
 
-    // resetar estado antes de mostrar
+    el.textContent = "✅ Ideia salva com sucesso!";
+
     el.style.display = "block";
     el.style.opacity = "0";
     el.style.transform = "translateY(-10px)";
 
-    // força reflow pra reiniciar animação
     void el.offsetWidth;
 
-    // mostrar
     el.style.opacity = "1";
     el.style.transform = "translateY(0)";
 
-    // esconder depois
     setTimeout(() => {
         el.style.opacity = "0";
         el.style.transform = "translateY(-10px)";
 
         setTimeout(() => {
-            el.style.display = "none"; // ✅ ESSENCIAL
+            el.style.display = "none";
         }, 300);
     }, 2000);
 }
@@ -181,8 +190,6 @@ function mostrarSalvo() {
 async function salvar(id) {
 
     id = Number(id);
-
-    calcular(id);
 
     const status = document.querySelector(`[data-status="${id}"]`).value.trim();
 

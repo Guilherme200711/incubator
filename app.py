@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from openpyxl import load_workbook
 from openpyxl import Workbook
-from datetime import datetime
+from datetime import datetime, timedelta
 from threading import Lock
 
 excel_lock = Lock()
@@ -300,8 +300,16 @@ def api_ranking():
     cur.execute("""
         SELECT nome, area, ideia, prioridade
         FROM ideias
-        WHERE status IN ('Aplicada', 'Concluída')
-        ORDER BY prioridade ASC
+        WHERE status IN (
+            'Incubadora',
+            'Projeto',
+            'Execução Rápida',
+            'Não Priorizada',
+            'Implementação',
+            'Aplicada',
+            'Concluída'
+        )
+        ORDER BY prioridade ASC NULLS LAST
     """)
 
 
@@ -421,6 +429,14 @@ def enviar_ideia():
     apoio = request.form.get("apoio")
 
     arquivo = request.files.get("evidencia")
+    
+    print("ARQUIVO RECEBIDO:", arquivo)
+
+    if arquivo:
+        print("NOME DO ARQUIVO:", arquivo.filename)
+    else:
+        print("NENHUM ARQUIVO RECEBIDO")
+
 
     caminho_arquivo = None
 
@@ -432,8 +448,10 @@ def enviar_ideia():
             "uploads",
             arquivo.filename
         )
-
+        
         arquivo.save(caminho_arquivo)
+        
+        print("SALVO EM:", os.path.abspath(caminho_arquivo))
 
     conn = conectar_db()
     cur = conn.cursor()
@@ -561,8 +579,7 @@ def listar_ideias():
     return jsonify([
         {
             "id": r[0],
-            "data_criacao": str(r[1]),
-
+            "data_criacao": str(r[1] - timedelta(hours=3)),
             "nome": r[2],
             "matricula": r[3],
             "supervisor": r[4],
@@ -831,6 +848,7 @@ def minhas_ideias():
                 ELSE 10
             END,
             data_criacao DESC
+
     """, (session["usuario_id"],))
 
     dados = cur.fetchall()

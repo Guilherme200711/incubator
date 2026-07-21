@@ -7,7 +7,7 @@
 }
 
 .form-page form {
-    width: 50%;
+    width: 100%;
     max-width: 800px;
 
     margin: 0 auto;
@@ -274,5 +274,46 @@ form .btn:active {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+@media (max-width: 1024px) {
+
+    .form-page form {
+        max-width: 90%;
+    }
+}
+@media (max-width: 700px) {
+
+    .form-page {
+        padding: 20px 12px 50px;
+    }
+
+    .form-page form {
+        max-width: 100%;
+        padding: 24px;
+    }
+
+    .form-header h2 {
+        font-size: 24px;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}
+@media (max-width: 400px) {
+
+    .form-page form {
+        padding: 18px;
+    }
+
+    .form-header h2 {
+        font-size: 22px;
+    }
+
+    label {
+        font-size: 13px;
     }
 }
