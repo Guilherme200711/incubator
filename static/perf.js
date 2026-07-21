@@ -101,8 +101,8 @@ async function carregarIdeias() {
 
         tbody.appendChild(tr);
 
-        calcular(i.id);
     });
+    console.log("Linhas na tabela:", tbody.children.length);
 }
 
 
