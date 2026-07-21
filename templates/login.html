@@ -2,9 +2,8 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Login | Incubadora de Ideias</title>
+    <title>Incubadora de Ideias</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="/static/base.css">
     <link rel="stylesheet" href="/static/forms.css">
     <link rel="shortcut icon" href="/static/Designer.png" type="image/x-icon">
@@ -16,8 +15,13 @@
 <form id="loginForm">
 
     <div class="form-header">
-        <h2>Acesso ao Sistema</h2>
-        <p>Entre com sua matrícula e e-mail</p>
+        <h2>Incubadora de Ideias</h2>
+        <p>Informe seu nome e matrícula para continuar</p>
+    </div>
+
+    <div class="form-group">
+        <label>Nome</label>
+        <input type="text" name="nome" required>
     </div>
 
     <div class="form-group">
@@ -25,22 +29,12 @@
         <input type="text" name="matricula" required>
     </div>
 
-    <div class="form-group">
-        <label>Senha</label>
-        <input type="password" name="senha" required>
-    </div>
-
-    <button type="submit" class="btn">Entrar</button>
-
-    <p style="margin-top:16px; text-align:center">
-        Primeiro acesso?
-        <a href="/cadastro"><b>Criar conta</b></a>
-    </p>
+    <button type="submit" class="btn">
+        Entrar
+    </button>
 
 </form>
-
 </main>
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
@@ -51,10 +45,9 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         new FormData(e.target).entries()
     );
 
-    // 🔵 LOADING bonito
     Swal.fire({
         title: 'Entrando...',
-        text: 'Validando acesso',
+        text: 'Validando informações',
         allowOutsideClick: false,
         didOpen: () => {
             Swal.showLoading();
@@ -62,35 +55,49 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     });
 
     try {
+
         const resp = await fetch("/api/login", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(dados)
         });
 
+        const resultado = await resp.json();
+
         if (resp.ok) {
 
-            // ✅ SUCESSO bonito
-            Swal.fire({
-                icon: 'success',
-                title: 'Login realizado!',
-                text: 'Redirecionando...',
-                confirmButtonColor: '#c3002f',
-                timer: 1500,
-                showConfirmButton: false
-            });
+            if (resultado.primeiro_acesso) {
 
-            setTimeout(() => {
-                window.location.href = "/";
-            }, 1500);
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Bem-vindo à Incubadora de Ideias!',
+                    text: 'Seu acesso foi criado com sucesso.',
+                    confirmButtonColor: '#c3002f'
+                });
+
+            } else {
+
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Bem-vindo de volta!',
+                    text: 'Redirecionando...',
+                    confirmButtonColor: '#c3002f',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+            }
+
+            window.location.href = "/";
 
         } else {
 
-            // ❌ ERRO bonito
             Swal.fire({
                 icon: 'error',
-                title: 'Erro no login',
-                text: 'Matrícula ou senha inválidos.',
+                title: 'Não foi possível acessar',
+                text: resultado.erro || 'Tente novamente.',
                 confirmButtonColor: '#c3002f'
             });
 

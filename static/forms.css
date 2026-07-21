@@ -1,117 +1,278 @@
 /* =====================================================
-   FORMULÁRIO — LARGO, NORMAL, SEM EXAGERO
+   FORMULÁRIO NISSAN PRO
 ===================================================== */
 
-/* área da página */
 .form-page {
-    padding: 60px 20px 80px;
+    padding: 50px 20px 80px;
 }
 
-/* ✅ CARD DO FORMULÁRIO (LARGO DE VERDADE) */
 .form-page form {
-    width: 100%;
-    max-width: 600px;
+    width: 50%;
+    max-width: 800px;
+
     margin: 0 auto;
 
-    background: #fff;
-    padding: 36px 44px;
-    border-radius: 16px;
+    background: #ffffff;
 
-    box-shadow: 0 12px 24px rgba(0,0,0,.12);
+    padding: 40px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.08),
+        0 2px 8px rgba(0,0,0,.04);
+
+    border: 1px solid #ececec;
 }
 
-/* cabeçalho */
+/* HEADER */
+
 .form-header {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 40px;
 }
 
 .form-header h2 {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     color: #c5002a;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .form-header p {
-    font-size: 14px;
+    font-size: 15px;
     color: #666;
 }
 
-/* grupos */
-.form-group {
-    margin-bottom: 22px;
+/* GRID */
+
+#formIdeia {
+    display: grid;
+    gap: 22px;
 }
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* LABELS */
 
 label {
-    display: block;
-    margin-bottom: 6px;
     font-size: 14px;
-    font-weight: 600;
-    color: #333;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 6px;
 }
 
-/* campos */
+.form-group small {
+    display: block;
+    color: #7c7c7c;
+    font-size: 13px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+/* INPUTS */
+
 input,
 select,
 textarea {
     width: 100%;
-    padding: 12px 14px;
+
+    padding: 14px 16px;
+
+    border: 1px solid #d8d8d8;
+
+    border-radius: 12px;
+
     font-size: 14px;
 
-    border-radius: 10px;
-    border: 1px solid #ccc;
+    background: #fff;
+
+    transition: .25s ease;
 }
 
 textarea {
-    min-height: 140px;
+    resize: vertical;
+    min-height: 130px;
 }
 
-/* foco */
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: #b8b8b8;
+}
+
 input:focus,
 select:focus,
 textarea:focus {
     outline: none;
+
     border-color: #c5002a;
+
+    box-shadow:
+        0 0 0 4px rgba(197,0,42,.08);
 }
 
-/* botão */
+/* CAMPOS SOMENTE LEITURA */
+
+input[readonly] {
+    background: #f6f6f6;
+    color: #666;
+    font-weight: 500;
+}
+
+/* FILE */
+
+input[type="file"] {
+    padding: 12px;
+    background: #fafafa;
+}
+
+/* BOTÃO */
+
 form .btn {
-    margin-top: 28px;
+    margin-top: 15px;
 
     width: 100%;
-    padding: 12px;
-    font-size: 15px;
-    font-weight: 600;
 
-    background: #c5002a;
-    color: #fff;
+    height: 54px;
 
-    border-radius: 10px;
     border: none;
+
+    border-radius: 12px;
+
+    background: linear-gradient(
+        135deg,
+        #c5002a,
+        #a80023
+    );
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: 700;
+
     cursor: pointer;
+
+    transition: all .25s ease;
 }
 
 form .btn:hover {
-    opacity: 0.95;
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(197,0,42,.25);
 }
 
-@media (max-width: 768px) {
+form .btn:active {
+    transform: translateY(0);
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
     .form-page {
-        padding: 40px 16px 60px;
+        padding: 30px 15px 60px;
     }
 
     .form-page form {
-        padding: 28px 22px;
+        padding: 28px;
     }
 
     .form-header h2 {
-        font-size: 22px;
+        font-size: 26px;
     }
 }
+.modal-sucesso {
+    position: fixed;
+    inset: 0;
 
-@media (max-width: 420px) {
-    .form-page form {
-        padding: 24px 18px;
+    background: rgba(0,0,0,.55);
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;
+}
+
+.modal-sucesso.ativo {
+    display: flex;
+}
+
+.modal-box {
+    width: 90%;
+    max-width: 420px;
+
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 18px;
+
+    text-align: center;
+
+    box-shadow: 0 20px 40px rgba(0,0,0,.2);
+
+    animation: aparecer .25s ease;
+}
+
+.modal-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.modal-box h2 {
+    color: #c5002a;
+    margin-bottom: 10px;
+}
+
+.protocolo {
+    margin: 22px 0;
+
+    padding: 12px;
+
+    background: #f5f5f5;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+}
+
+.modal-box button {
+    width: 100%;
+
+    height: 48px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #c5002a;
+
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.modal-box button:hover {
+    opacity: .95;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

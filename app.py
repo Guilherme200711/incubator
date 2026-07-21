@@ -21,15 +21,14 @@ if not os.path.isfile(file_path):
 
         ws.append([
             "ID",
-            "Titulo",
+            "Ideia",
             "Data",
             "Nome",
             "Matricula",
-            "Gestor",
+            "Supervisor",
             "Area",
-            "Descricao",
-            "Antes/Depois",
-            "Impacto",
+            "Observacao",
+            "Local_Ocorrencia",
             "Saving (R$)",
 
             "Qualidade",
@@ -78,16 +77,15 @@ def sincronizar_excel():
     cur.execute("""
         SELECT
             id,
-            titulo,
+            ideia,
             data_criacao,
             nome,
             matricula,
             supervisor,
             area,
-            descricao,
-            antes_depois,
+            observacao,
+            local_ocorrencia,
 
-            impacto,
             saving_real,
 
             qualidade,
@@ -140,26 +138,25 @@ def sincronizar_excel():
                 r[7],   # Descricao
                 r[8],   # Antes/Depois
 
-                r[9],   # Impacto
-                r[10],  # Saving (R$)
+                r[9],  # Saving (R$)
 
-                r[11],  # Qualidade
-                r[12],  # Seguranca
-                r[13],  # KPI
-                r[14],  # Saving Score
-                r[15],  # Norma
+                r[10],  # Qualidade
+                r[11],  # Seguranca
+                r[12],  # KPI
+                r[13],  # Saving Score
+                r[14],  # Norma
 
-                r[16],  # Mudança Processo
-                r[17],  # Mudança Material
-                r[18],  # Tempo
-                r[19],  # Treinamento
-                r[20],  # Logistica
-                r[21],  # Fornecedor
+                r[15],  # Mudança Processo
+                r[16],  # Mudança Material
+                r[17],  # Tempo
+                r[18],  # Treinamento
+                r[19],  # Logistica
+                r[20],  # Fornecedor
 
-                float(r[22] or 0),  # Total Beneficio
-                float(r[23 or 0]),  # Total Esforco
-                r[24],  # Prioridade
-                r[25]   # Status
+                float(r[21] or 0),  # Total Beneficio
+                float(r[22] or 0),  # Total Esforco
+                r[23],  # Prioridade
+                r[24]   # Status
             ])
 
         wb.save(file_path)
@@ -181,12 +178,6 @@ def index():
 def login():
     return render_template("login.html")
 
-
-@app.route("/cadastro")
-def cadastro():
-    return render_template("cadastro.html")
-
-
 @app.route("/logout")
 def logout():
     session.clear()
@@ -201,9 +192,8 @@ def formulario():
     return render_template(
         "formulario.html",
         nome=session["nome"],
-        matricula=session["matricula"],
-        area=session.get("area")
-    )
+    matricula=session["matricula"]
+)
 
 
 @app.route("/performance")
@@ -224,15 +214,15 @@ def api_dashboard():
     cur.execute("""
         SELECT
             id,
-            titulo,
+            ideia,
             data_criacao,
             nome,
             matricula,
             supervisor,
             area,
-            descricao,
-            antes_depois,
-            impacto,
+            observacao,
+            local_ocorrencia,
+
             saving_real,
 
             qualidade,
@@ -265,34 +255,34 @@ def api_dashboard():
     return jsonify([
         {
             "id": r[0],
-            "titulo": r[1],
+            "ideia": r[1],
             "data_criacao": str(r[2]),
             "nome": r[3],
             "matricula": r[4],
             "supervisor": r[5],
             "area": r[6],
-            "descricao": r[7],
-            "antes_depois": r[8],
-            "impacto": r[9],
-            "saving_real": r[10],
+            "observacao": r[7],
+            "local_ocorrencia": r[8],
 
-            "qualidade": r[11],
-            "seguranca": r[12],
-            "kpi": r[13],
-            "saving_beneficio": r[14],
-            "norma": r[15],
+            "saving_real": r[9],
 
-            "mudanca_processo": r[16],
-            "mudanca_material": r[17],
-            "tempo": r[18],
-            "treinamento": r[19],
-            "logistica": r[20],
-            "fornecedor": r[21],
+            "qualidade": r[10],
+            "seguranca": r[11],
+            "kpi": r[12],
+            "saving_beneficio": r[13],
+            "norma": r[14],
 
-            "total_beneficio": r[22],
-            "total_esforco": r[23],
-            "prioridade": r[24],
-            "status": r[25]
+            "mudanca_processo": r[15],
+            "mudanca_material": r[16],
+            "tempo": r[17],
+            "treinamento": r[18],
+            "logistica": r[19],
+            "fornecedor": r[20],
+
+            "total_beneficio": r[21],
+            "total_esforco": r[22],
+            "prioridade": r[23],
+            "status": r[24]
         }
         for r in dados
     ])
@@ -308,11 +298,12 @@ def api_ranking():
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT nome, area, titulo, prioridade
+        SELECT nome, area, ideia, prioridade
         FROM ideias
-        WHERE status = 'Aprovada'
-        ORDER BY prioridade ASC, total_beneficio DESC
+        WHERE status IN ('Aplicada', 'Concluída')
+        ORDER BY prioridade ASC
     """)
+
 
     dados = cur.fetchall()
 
@@ -320,14 +311,14 @@ def api_ranking():
     conn.close()
 
     return jsonify([
-        {
-            "nome": r[0],
-            "area": r[1],
-            "titulo": r[2],
-            "pontuacao": r[3]
-        }
-        for r in dados
-    ])
+    {
+        "nome": r[0],
+        "area": r[1],
+        "ideia": r[2],
+        "prioridade": r[3]
+    }
+    for r in dados
+])
 
 @app.route("/contato")
 def contato():
@@ -336,113 +327,163 @@ def contato():
 
 @app.route("/api/login", methods=["POST"])
 def api_login():
+
     d = request.get_json()
+
     if not d:
         return jsonify({"erro": "JSON inválido"}), 400
+
+    nome = d.get("nome", "").strip()
+    matricula = d.get("matricula", "").strip()
+
+    if not nome or not matricula:
+        return jsonify({"erro": "Nome e matrícula são obrigatórios"}), 400
 
     conn = conectar_db()
     cur = conn.cursor()
 
+    # procura usuário pela matrícula
     cur.execute("""
-        SELECT id, nome, area
+        SELECT id, nome
         FROM usuarios
-        WHERE matricula = %s AND senha = %s
-    """, (d["matricula"], d["senha"]))
+        WHERE matricula = %s
+    """, (matricula,))
 
     user = cur.fetchone()
 
+    primeiro_acesso = False
+
+    # não existe -> cria automaticamente
     if not user:
-        cur.close()
-        conn.close()
-        return jsonify({"erro": "Usuário não encontrado"}), 401
 
-    session["usuario_id"] = user[0]
-    session["nome"] = user[1]
-    session["matricula"] = d["matricula"]
-    session["area"] = user[2]
+        cur.execute("""
+            INSERT INTO usuarios (
+                nome,
+                matricula,
+                criado_em,
+                ultimo_acesso
+            )
+            VALUES (%s, %s, NOW(), NOW())
+            RETURNING id
+        """, (nome, matricula))
 
-    cur.close()
-    conn.close()
+        user_id = cur.fetchone()[0]
 
-    return jsonify({"ok": True})
+        conn.commit()
 
+        session["usuario_id"] = user_id
+        session["nome"] = nome
+        session["matricula"] = matricula
 
-@app.route("/api/cadastro", methods=["POST"])
-def api_cadastro():
-    d = request.get_json()
-    if not d:
-        return jsonify({"erro": "JSON inválido"}), 400
+        primeiro_acesso = True
 
-    conn = conectar_db()
-    cur = conn.cursor()
+    else:
 
-    cur.execute("SELECT id FROM usuarios WHERE matricula = %s", (d["matricula"],))
-    if cur.fetchone():
-        cur.close()
-        conn.close()
-        return jsonify({"erro": "Usuário já existe"}), 400
+        cur.execute("""
+            UPDATE usuarios
+            SET ultimo_acesso = NOW()
+            WHERE matricula = %s
+        """, (matricula,))
 
-    cur.execute("""
-        INSERT INTO usuarios (nome, matricula, senha)
-        VALUES (%s, %s, %s)
-    """, (d["nome"], d["matricula"], d["senha"]))
+        conn.commit()
 
-    conn.commit()
-
-    cur.execute("SELECT id FROM usuarios WHERE matricula = %s", (d["matricula"],))
-    user_id = cur.fetchone()[0]
-
-    session["usuario_id"] = user_id
-    session["nome"] = d["nome"]
-    session["matricula"] = d["matricula"]
+        session["usuario_id"] = user[0]
+        session["nome"] = user[1]
+        session["matricula"] = matricula
 
     cur.close()
     conn.close()
 
-    return jsonify({"ok": True})
+    return jsonify({
+        "ok": True,
+        "primeiro_acesso": primeiro_acesso
+    })
 
 
 @app.route("/api/ideias", methods=["POST"])
 def enviar_ideia():
+
     if "usuario_id" not in session:
         return jsonify({"erro": "Não autorizado"}), 401
 
-    d = request.get_json()
-    if not d:
-        return jsonify({"erro": "JSON inválido"}), 400
+    nome = request.form.get("nome")
+    matricula = request.form.get("matricula")
+    area = request.form.get("area")
+    supervisor = request.form.get("supervisor")
+
+    observacao = request.form.get("observacao")
+    ideia = request.form.get("ideia")
+
+    local_ocorrencia = request.form.get("local_ocorrencia")
+    beneficio = request.form.get("beneficio")
+
+    frequencia = request.form.get("frequencia")
+    apoio = request.form.get("apoio")
+
+    arquivo = request.files.get("evidencia")
+
+    caminho_arquivo = None
+
+    if arquivo and arquivo.filename:
+
+        os.makedirs("uploads", exist_ok=True)
+
+        caminho_arquivo = os.path.join(
+            "uploads",
+            arquivo.filename
+        )
+
+        arquivo.save(caminho_arquivo)
 
     conn = conectar_db()
     cur = conn.cursor()
 
     cur.execute("""
-    INSERT INTO ideias (
-        usuario_id, nome, matricula, area, supervisor,
-        titulo, descricao, antes_depois,
-        equipamento, peca, material, part_number,
-        area_aplicacao
-    )
+        INSERT INTO ideias (
+            usuario_id,
+            nome,
+            matricula,
+            area,
+            supervisor,
+            observacao,
+            ideia,
+            local_ocorrencia,
+            beneficio,
+            frequencia,
+            apoio,
+            evidencia,
+            status
+        )
         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        RETURNING id
     """, (
         session["usuario_id"],
-        d["nome"],
-        d["matricula"],
-        d["area"],
-        d["supervisor"],
-        d["titulo"],
-        d["descricao"],
-        d["antes_depois"],
-        d.get("equipamento"),
-        d.get("peca"),
-        d.get("material"),
-        d.get("part_number"),
-        d["area_aplicacao"]
+        nome,
+        matricula,
+        area,
+        supervisor,
+        observacao,
+        ideia,
+        local_ocorrencia,
+        beneficio,
+        frequencia,
+        apoio,
+        caminho_arquivo,
+        "Validação"
     ))
 
+    novo_id = cur.fetchone()[0]
+
     conn.commit()
+
     cur.close()
     conn.close()
 
-    return jsonify({"ok": True})
+    return jsonify({
+        "ok": True,
+        "protocolo": f"2026_{novo_id:04d}"
+    })
+
 
 
 @app.route("/api/performance/auth", methods=["POST"])
@@ -459,7 +500,7 @@ def auth_performance():
 
 
 def autorizado():
-    return session.get("performance_autorizado") is True
+    return True
 
 
 @app.before_request
@@ -475,23 +516,41 @@ def listar_ideias():
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT
-            id, titulo, data_criacao, nome, matricula, supervisor,
-            area, descricao, antes_depois, status, impacto,
+       SELECT
+        id,
+        data_criacao,
+        nome,
+        matricula,
+        supervisor,
+        area,
 
-            qualidade, seguranca, kpi, saving_beneficio,
-            saving_real,
-            norma,
+        observacao,
+        ideia,
+        local_ocorrencia,
+        beneficio,
+        frequencia,
+        apoio,
 
-            mudanca_processo, mudanca_material, tempo,
-            treinamento, logistica, fornecedor,
+        status,
 
-            total_beneficio,
-            total_esforco,
-            prioridade
-        FROM ideias
-        ORDER BY prioridade ASC, data_criacao DESC
+        qualidade,
+        seguranca,
+        kpi,
+        saving_beneficio,
+        saving_real,
+        norma,
 
+        mudanca_processo,
+        mudanca_material,
+        tempo,
+        treinamento,
+        logistica,
+        fornecedor,
+
+        prioridade
+
+    FROM ideias
+    ORDER BY prioridade NULLS LAST, data_criacao DESC
     """)
 
     dados = cur.fetchall()
@@ -500,37 +559,40 @@ def listar_ideias():
     conn.close()
 
     return jsonify([
-    {
-        "id": r[0],
-        "titulo": r[1],
-        "data_criacao": str(r[2]),
-        "nome": r[3],
-        "matricula": r[4],
-        "supervisor": r[5],
-        "area": r[6],
-        "descricao": r[7],
-        "antes_depois": r[8],
-        "status": r[9],
-        "impacto": r[10],
-        "saving_real": r[11],
+        {
+            "id": r[0],
+            "data_criacao": str(r[1]),
 
-        "qualidade": r[12],
-        "seguranca": r[13],
-        "kpi": r[14],
-        "saving_beneficio": r[15],
-        "norma": r[16],
+            "nome": r[2],
+            "matricula": r[3],
+            "supervisor": r[4],
+            "area": r[5],
 
-        "mudanca_processo": r[17],
-        "mudanca_material": r[18],
-        "tempo": r[19],
-        "treinamento": r[20],
-        "logistica": r[21],
-        "fornecedor": r[22],
+            "observacao": r[6],
+            "ideia": r[7],
+            "local_ocorrencia": r[8],
+            "beneficio": r[9],
+            "frequencia": r[10],
+            "apoio": r[11],
 
-        "total_beneficio": r[23],
-        "total_esforco": r[24],
-        "prioridade": r[25]
-    }
+            "status": r[12],
+
+            "qualidade": r[13],
+            "seguranca": r[14],
+            "kpi": r[15],
+            "saving_beneficio": r[16],
+            "saving_real": r[17],
+            "norma": r[18],
+
+            "mudanca_processo": r[19],
+            "mudanca_material": r[20],
+            "tempo": r[21],
+            "treinamento": r[22],
+            "logistica": r[23],
+            "fornecedor": r[24],
+
+            "prioridade": r[25]
+        }
     for r in dados
     ])
 
@@ -560,19 +622,13 @@ def avaliar_ideia():
     d = request.get_json()
     id_recebido = int(d["id"])
 
-    # ✅ BLOQUEIO DEFINITIVO
-    if d["prioridade"] not in [1, 2, 3, 4]:
-        d["prioridade"] = 3
-
-
     conn = conectar_db()
     cur = conn.cursor()
 
     cur.execute("""
     UPDATE ideias SET
+
         status = %s,
-        impacto = %s,
-        pontuacao = %s,
 
         qualidade = %s,
         seguranca = %s,
@@ -592,18 +648,16 @@ def avaliar_ideia():
         total_esforco = %s,
         prioridade = %s
 
-    WHERE id = %s
-    """, (
+        WHERE id = %s
+        """, (
+
         d["status"],
-        d["impacto"],
-        d["pontuacao"],
 
         d["qualidade"],
         d["seguranca"],
         d["kpi"],
-        d["saving_beneficio"],  # score
-        d["saving_real"],       # novo campo
-
+        d["saving_beneficio"],
+        d["saving_real"],
         d["norma"],
 
         d["mudanca_processo"],
@@ -624,9 +678,16 @@ def avaliar_ideia():
 
     # ✅ CORREÇÃO
     cur.execute("""
-        SELECT titulo, nome, matricula, supervisor, area, descricao, antes_depois, data_criacao
-        FROM ideias
-        WHERE id = %s
+    SELECT ideia,
+        nome,
+        matricula,
+        supervisor,
+        area,
+        observacao,
+        local_ocorrencia,
+        data_criacao
+    FROM ideias
+    WHERE id = %s
     """, (id_recebido,))
     info = cur.fetchone()
 
@@ -669,26 +730,25 @@ def avaliar_ideia():
                 linha_existente[7].value = info[5]
                 linha_existente[8].value = info[6]
 
-                linha_existente[9].value = d["impacto"]
-                linha_existente[10].value = d["saving_real"]
+                linha_existente[9].value = d["saving_real"]
 
-                linha_existente[11].value = d["qualidade"]
-                linha_existente[12].value = d["seguranca"]
-                linha_existente[13].value = d["kpi"]
-                linha_existente[14].value = d["saving_beneficio"]
-                linha_existente[15].value = d["norma"]
+                linha_existente[10].value = d["qualidade"]
+                linha_existente[11].value = d["seguranca"]
+                linha_existente[12].value = d["kpi"]
+                linha_existente[13].value = d["saving_beneficio"]
+                linha_existente[14].value = d["norma"]
 
-                linha_existente[16].value = d["mudanca_processo"]
-                linha_existente[17].value = d["mudanca_material"]
-                linha_existente[18].value = d["tempo"]
-                linha_existente[19].value = d["treinamento"]
-                linha_existente[20].value = d["logistica"]
-                linha_existente[21].value = d["fornecedor"]
+                linha_existente[15].value = d["mudanca_processo"]
+                linha_existente[16].value = d["mudanca_material"]
+                linha_existente[17].value = d["tempo"]
+                linha_existente[18].value = d["treinamento"]
+                linha_existente[19].value = d["logistica"]
+                linha_existente[20].value = d["fornecedor"]
 
-                linha_existente[22].value = d["total_beneficio"]
-                linha_existente[23].value = d["total_esforco"]
-                linha_existente[24].value = d["prioridade"]
-                linha_existente[25].value = d["status"]
+                linha_existente[21].value = d["total_beneficio"]
+                linha_existente[22].value = d["total_esforco"]
+                linha_existente[23].value = d["prioridade"]
+                linha_existente[24].value = d["status"]
 
             else:
 
@@ -702,8 +762,7 @@ def avaliar_ideia():
                     info[4],
                     info[5],
                     info[6],
-
-                    d["impacto"],
+                    
                     d["saving_real"],
 
                     d["qualidade"],
@@ -750,15 +809,26 @@ def minhas_ideias():
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT id, titulo, descricao, status
+        SELECT
+            id,
+            ideia,
+            observacao,
+            status,
+            data_criacao
         FROM ideias
         WHERE usuario_id = %s
         ORDER BY
-            CASE 
-                WHEN status = 'Aprovada' THEN 1
-                WHEN status = 'Em análise' THEN 2
-                WHEN status = 'Reprovada' THEN 3
-                ELSE 4
+            CASE
+                WHEN status = 'Implementação' THEN 1
+                WHEN status = 'Aplicada' THEN 2
+                WHEN status = 'Concluída' THEN 3
+                WHEN status = 'Projeto' THEN 4
+                WHEN status = 'Execução Rápida' THEN 5
+                WHEN status = 'Incubadora' THEN 6
+                WHEN status = 'Validação' THEN 7
+                WHEN status = 'Não Priorizada' THEN 8
+                WHEN status = 'Não Viável' THEN 9
+                ELSE 10
             END,
             data_criacao DESC
     """, (session["usuario_id"],))
@@ -771,9 +841,9 @@ def minhas_ideias():
     return jsonify([
         {
             "id": r[0],
-            "titulo": r[1],
-            "descricao": r[2],
-            "status": r[3] if r[3] else "Em análise"
+            "ideia": r[1],
+            "observacao": r[2],
+            "status": r[3] if r[3] else "Validação"
         }
         for r in dados
     ])

@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const formData = new FormData(loginForm);
 
             const dados = {
-                matricula: formData.get("matricula"),
-                senha: formData.get("senha")
+                nome: formData.get("nome"),
+                matricula: formData.get("matricula")
             };
 
             try {
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (resp.ok) {
                     window.location.href = "/";
                 } else {
-                    alert("❌ Login inválido. Verifique matrícula e senha.");
+                    alert("❌ Não foi possível acessar.");
                 }
 
             } catch (err) {
@@ -41,56 +41,43 @@ document.addEventListener("DOMContentLoaded", () => {
     // ===============================
     // ENVIO DE IDEIA
     // ===============================
-    const formIdeia = document.getElementById("formIdeia");
+const formIdeia = document.getElementById("formIdeia");
 
-    if (formIdeia) {
-        formIdeia.addEventListener("submit", async (e) => {
-            e.preventDefault();
+if (formIdeia) {
+    formIdeia.addEventListener("submit", async (e) => {
 
-            const formData = new FormData(formIdeia);
+        e.preventDefault();
 
-            const dados = {
-                nome: formData.get("nome"),
-                matricula: formData.get("matricula"),
-                area: formData.get("area"),
-                supervisor: formData.get("supervisor"),
-                titulo: formData.get("titulo"),
-                descricao: formData.get("descricao"),
-                antes_depois: formData.get("antes_depois"),
-                equipamento: formData.get("equipamento"),
-                peca: formData.get("peca"),
-                material: formData.get("material"),
-                part_number: formData.get("part_number"),
-                area_aplicacao: formData.get("area_aplicacao")
-            };
+        const formData = new FormData(formIdeia);
 
-            try {
-                const resp = await fetch("/api/ideias", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(dados)
-                });
+        try {
 
-                if (resp.ok) {
-                    alert("✅ Ideia enviada com sucesso!");
+            const resp = await fetch("/api/ideias", {
+                method: "POST",
+                body: formData
+            });
+
+            const resultado = await resp.json();
+
+            if (resp.ok) {
+
+                abrirModal(resultado.protocolo);
                     formIdeia.reset();
-
-                    // 🔥 Atualiza a lista na home automaticamente
                     carregarMinhasIdeias();
+            } else {
 
-                } else {
-                    alert("❌ Erro ao enviar ideia");
-                }
+                alert(resultado.erro || "Erro ao enviar ideia");
 
-            } catch (err) {
-                console.error(err);
-                alert("❌ Erro de conexão");
             }
-        });
-    }
 
+        } catch (err) {
+
+            console.error(err);
+            alert("❌ Erro de conexão");
+
+        }
+    });
+}
     // ===============================
     // MINHAS IDEIAS (HOME)
     // ===============================
@@ -146,22 +133,47 @@ function renderIdeias(ideias, expandido) {
 
         let classe = "analise";
         let emoji = "⏳";
-        let status = i.status || "Em análise";
+        let status = i.status || "Validação";
 
-        if (status === "Aprovada") {
-            classe = "aprovado";
-            emoji = "✅";
-        } else if (status === "Reprovada") {
+        if (status === "Não Viável") {
             classe = "reprovado";
             emoji = "❌";
         }
+
+        else if (
+            status === "Incubadora" ||
+            status === "Projeto" ||
+            status === "Execução Rápida" ||
+            status === "Implementação"
+        ) {
+            classe = "aprovado";
+            emoji = "🚀";
+        }
+
+        else if (status === "Aplicada") {
+            classe = "aprovado";
+            emoji = "✅";
+        }
+
+        else if (status === "Concluída") {
+            classe = "aprovado";
+            emoji = "🏆";
+        }
+
+        else if (status === "Não Priorizada") {
+            classe = "analise";
+            emoji = "📌";
+        }
+
 
         html += `
             <div class="ideia-card ${classe}">
                 <div class="ideia-info">
                     <span class="ideia-desc">
-                        <b>${i.titulo}</b><br>
-                        ${i.descricao}
+                        <span class="protocolo">
+                           Protocolo: 2026_${String(i.id).padStart(4, "0")}
+                        </span>
+                        ${i.ideia}
                     </span>
                 </div>
                 <div class="ideia-status">
@@ -188,4 +200,20 @@ function renderIdeias(ideias, expandido) {
 }
 function toggleIdeias() {
     renderIdeias(window._ideiasCache, !window._expandido);
+}
+function abrirModal(protocolo) {
+
+    document.getElementById("numeroProtocolo").textContent =
+        protocolo;
+
+    document
+        .getElementById("modalSucesso")
+        .classList.add("ativo");
+}
+
+function fecharModal() {
+
+    document
+        .getElementById("modalSucesso")
+        .classList.remove("ativo");
 }

@@ -552,3 +552,12 @@ body {
         transition: none !important;
     }
 }
+.protocolo {
+    display: block;
+    text-align: left;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 8px;
+}

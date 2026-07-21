@@ -23,93 +23,101 @@
 <main class="form-page">
 <form id="formIdeia">
 
-    <!-- DADOS DO COLABORADOR (LOGIN) -->
-    <div class="form-header">
-        <h2>Enviar Ideia</h2>
-        <p>Preencha os campos conforme o formulário oficial de projetos</p>
-    </div>
+<div class="form-header">
+    <h2>💡 Compartilhe sua Ideia!</h2>
+    <p>Sua contribuição pode gerar melhorias para toda a Nissan.</p>
+</div>
 
-    <div class="form-group">
-        <label>Nome Completo</label>
-        <input type="text" name="nome" value="{{ nome }}" readonly required>
-    </div>
+<div class="form-group">
+    <label>Nome</label>
+    <input type="text" name="nome" value="{{ nome }}" readonly required>
+</div>
 
-    <div class="form-group">
-        <label>Matrícula</label>
-        <input type="text" name="matricula" value="{{ matricula }}" readonly required>
-    </div>
+<div class="form-group">
+    <label>Matrícula</label>
+    <input type="text" name="matricula" value="{{ matricula }}" readonly required>
+</div>
 
-    <div class="form-group">
-        <label>Área</label>
-        <select name="area" required>
-            <option selected>{{ area }}</option>
-            <option>Processo</option>
-            <option>Sealer</option>
-            <option>UDC</option>
-            <option>ED Sanding</option>
-            <option>Top Coat Pintura</option>
-            <option>Finish Pintura</option>
-            <option>Performance</option>
-            <option>Kaizen</option>
-            <option>RTC</option>
-            <option>Mascaramento Biton</option>
-            <option>Injetora</option>
-            <option>Ferramentaria</option>
-            <option>Carregamento</option>
-            <option>Top Coat Plástico</option>
-            <option>Submontagem</option>
-            <option>T&amp;C</option>
-            <option>Body</option>
-            <option>Estamparia</option>
-        </select>
-    </div>
+<div class="form-group">
+    <label>Área</label>
+    <select name="area" required>
+        <option value="" selected disabled>Selecione uma área</option>
+        <option>Processo</option>
+        <option>Sealer</option>
+        <option>UDC</option>
+        <option>ED Sanding</option>
+        <option>Top Coat Pintura</option>
+        <option>Finish Pintura</option>
+        <option>Performance</option>
+        <option>Kaizen</option>
+        <option>RTC</option>
+        <option>Mascaramento Biton</option>
+        <option>Injetora</option>
+        <option>Ferramentaria</option>
+        <option>Carregamento</option>
+        <option>Top Coat Plástico</option>
+        <option>Submontagem</option>
+        <option>T&C</option>
+        <option>Body</option>
+        <option>Estamparia</option>
+    </select>
+</div>
 
-    <div class="form-group">
-        <label>Gestor Direto</label>
-        <input type="text" name="supervisor" required>
-    </div>
+<div class="form-group">
+    <label>Supervisor</label>
+    <input type="text" name="supervisor" required>
+</div>
 
-    <div class="form-group">
-        <label>Título da Ideia</label>
-        <input type="text" name="titulo" required>
-    </div>
+<div class="form-group">
+    <label>O que você observou?</label>
+    <small>Explique o problema, dificuldade ou oportunidade.</small>
+    <textarea name="observacao" required></textarea>
+</div>
 
-    <!-- DESCRIÇÃO DA IDEIA -->
-    <div class="form-group">
-        <label>Descrição da Ideia</label>
-        <textarea name="descricao" required></textarea>
-    </div>
+<div class="form-group">
+    <label>Qual é a sua ideia?</label>
+    <small>Descreva sua sugestão.</small>
+    <textarea name="ideia" required></textarea>
+</div>
 
-    <div class="form-group">
-        <label>Antes e Depois</label>
-        <textarea name="antes_depois"></textarea>
-    </div>
+<div class="form-group">
+    <label>Onde isso acontece?</label>
+    <small>Área, posto, equipamento, linha ou processo.</small>
+    <textarea name="local_ocorrencia" required></textarea>
+</div>
 
-    <div class="form-group">
-        <label>Peça Afetada (se aplicável)</label>
-        <input type="text" name="peca">
-    </div>
+<div class="form-group">
+    <label>Qual benefício a sua ideia pode gerar?</label>
+    <small>Custo, qualidade, segurança, ergonomia, meio ambiente, desperdício, clima social, inovação ou melhoria de posto.</small>
+    <textarea name="beneficio" required></textarea>
+</div>
 
-    <div class="form-group">
-        <label>Material Afetado (se aplicável)</label>
-        <input type="text" name="material">
-    </div>
+<div class="form-group">
+    <label>Deseja anexar alguma evidência?</label>
+    <small>Foto, vídeo, desenho ou documento.</small>
+    <input type="file" name="evidencia">
+</div>
 
-    <div class="form-group">
-        <label>Part Number / MABEC</label>
-        <input type="text" name="part_number">
-    </div>
-    <div class="form-group">
-        <label>Equipamento (se aplicável)</label>
-        <input type="text" name="equipamento">
-    </div>
+<div class="form-group">
+    <label>Essa situação acontece com qual frequência?</label>
+    <select name="frequencia" required>
+        <option value="" selected disabled>Selecione</option>
+        <option>Diariamente</option>
+        <option>Semanalmente</option>
+        <option>Ocasionalmente</option>
+        <option>Continuamente</option>
+    </select>
+</div>
 
-    <div class="form-group">
-        <label>Área de Aplicação da Ideia</label>
-        <input type="text" name="area_aplicacao" required>
-    </div>
+<div class="form-group">
+    <label>Quem mais pode ajudar a explicar a ideia?</label>
+    <small>Campo opcional.</small>
+    <input type="text" name="apoio">
+</div>
 
-    <button type="submit" class="btn">Enviar Ideia</button>
+<button type="submit" class="btn">
+    🚀 Enviar Ideia
+</button>
 
 </form>
 </main>
@@ -117,6 +125,33 @@
 <footer class="footer">
     © 2026 Nissan - Paint Shop Performance
 </footer>
+
+<div id="modalSucesso" class="modal-sucesso">
+
+    <div class="modal-box">
+
+        <div class="modal-icon">
+            ✅
+        </div>
+
+        <h2>Ideia Recebida!</h2>
+
+        <p>
+            Sua ideia foi enviada com sucesso.
+        </p>
+
+        <div class="protocolo">
+            Protocolo:
+            <strong id="numeroProtocolo"></strong>
+        </div>
+
+        <button onclick="fecharModal()">
+            Fechar
+        </button>
+
+    </div>
+
+</div>
 
 <script src="/static/script.js"></script>
 </body>
