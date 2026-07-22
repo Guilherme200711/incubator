@@ -208,6 +208,13 @@ def baixar_excel():
 @app.route("/api/dashboard")
 def api_dashboard():
 
+    def nivel(valor):
+        return {
+            3: "Baixo",
+            6: "Médio",
+            9: "Alto"
+        }.get(valor, "-")
+
     conn = conectar_db()
     cur = conn.cursor()
 
@@ -238,8 +245,6 @@ def api_dashboard():
             logistica,
             fornecedor,
 
-            total_beneficio,
-            total_esforco,
             prioridade,
             status
 
@@ -266,23 +271,21 @@ def api_dashboard():
 
             "saving_real": r[9],
 
-            "qualidade": r[10],
-            "seguranca": r[11],
-            "kpi": r[12],
-            "saving_beneficio": r[13],
-            "norma": r[14],
+            "qualidade": nivel(r[10]),
+            "seguranca": nivel(r[11]),
+            "kpi": nivel(r[12]),
+            "saving_beneficio": nivel(r[13]),
+            "norma": nivel(r[14]),
 
-            "mudanca_processo": r[15],
-            "mudanca_material": r[16],
-            "tempo": r[17],
-            "treinamento": r[18],
-            "logistica": r[19],
-            "fornecedor": r[20],
+            "mudanca_processo": nivel(r[15]),
+            "mudanca_material": nivel(r[16]),
+            "tempo": nivel(r[17]),
+            "treinamento": nivel(r[18]),
+            "logistica": nivel(r[19]),
+            "fornecedor": nivel(r[20]),
 
-            "total_beneficio": r[21],
-            "total_esforco": r[22],
-            "prioridade": r[23],
-            "status": r[24]
+            "prioridade": r[21],
+            "status": r[22]
         }
         for r in dados
     ])
